@@ -1,0 +1,21 @@
+(set-option :print-success true)
+(set-option :produce-unsat-cores true) ; enable generation of unsat cores
+(set-option :produce-models true) ; enable model generation
+(set-option :produce-proofs true) ; enable proof generation
+(declare-fun x () real)
+(declare-fun y () real)
+(declare-fun z () real)
+(declare-fun m () real)
+(declare-fun n () real)
+(declare-fun l () real)
+(assert (>= x 0.0))
+(assert (>= y 30.0))
+(assert (<= z 50.0))
+(assert (>= m 5.0))
+(assert (>= n 5.0))
+(assert (not (<= (+ (* m x) (* n y) l) 300.0)))
+(assert (forall ((u int) (v int))
+(let ((a!1 (<= (+ (* m (to_real u)) (* n (to_real v)) l) 300.0)))
+(or (<= (+ (to_real u) (to_real v) z) 50.0) a!1))))
+(check-sat)
+(get-model)

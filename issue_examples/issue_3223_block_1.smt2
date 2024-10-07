@@ -1,0 +1,8 @@
+(set-option :proof true)
+(declare-fun a () real)
+(declare-fun b () real)
+(declare-fun c () real)
+(declare-fun d () real)
+(declare-fun e () real)
+(assert (forall ((f real)) (and (or (and (> d (/ 0 b)) (= c 0)) (<= e 0)) (= d a))))
+(check-sat)

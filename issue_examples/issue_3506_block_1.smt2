@@ -1,0 +1,18 @@
+(set-option :produce-models true)
+(set-logic all)
+(define-fun s2 () string "x-must-really-be-hello")
+(define-fun s4 () string "y-can-be-anything-but-hello")
+(define-fun s6 () string "default-x-value")
+(define-fun s8 () string "default-y-value")
+(declare-fun s0 () string) ; tracks user variable "x"
+(declare-fun s1 () string) ; tracks user variable "y"
+(define-fun s3 () bool (= s0 s2))
+(define-fun s5 () bool (distinct s1 s4))
+(define-fun s7 () bool (= s0 s6))
+(define-fun s9 () bool (= s1 s8))
+(assert s3)
+(assert s5)
+(assert-soft s7)
+(assert-soft s9)
+(check-sat)
+(get-model)

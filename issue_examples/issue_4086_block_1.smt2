@@ -1,0 +1,7 @@
+(set-option :produce-models true)
+(set-logic all)
+(define-fun s0 () (seq int) (seq.++ (seq.unit 1) (seq.unit 2) (seq.unit 3)))
+(define-fun s1 () (seq int) (seq.unit 2))
+(declare-fun s2 () int)
+(assert (= s2 (seq.indexof s0 s1 1)))
+(check-sat)

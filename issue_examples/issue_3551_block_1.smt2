@@ -1,0 +1,8 @@
+(set-option :parallel.enable true)
+(set-option :sat.prob_search true)
+(set-option :sat.xor.solver true)
+(declare-fun a () bool)
+(declare-fun b () bool)
+(declare-fun c () bool)
+(assert (or b (and (or (not a) b) (not c))))
+(check-sat)

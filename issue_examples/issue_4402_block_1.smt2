@@ -1,0 +1,8 @@
+(set-option :produce-models true)
+(set-logic all)
+(define-fun s2 () real (/ 4.0 1.0))
+(declare-fun s0 () real)
+(define-fun s1 () real (* s0 s0))
+(define-fun s3 () bool (= s1 s2))
+(assert s3)
+(check-sat)

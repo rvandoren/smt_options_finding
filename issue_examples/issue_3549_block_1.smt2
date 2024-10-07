@@ -1,0 +1,5 @@
+(set-option :trace true)
+(declare-fun a () (_ floatingpoint 11 53))
+(declare-fun b () (_ floatingpoint 8 24))
+(assert (distinct b ((_ to_fp 8 24) rtp a)))
+(check-sat)

@@ -1,0 +1,13 @@
+(set-option :smt.mbqi true)
+(declare-sort a 0)
+(declare-sort b 0)
+(declare-fun f (a) b)
+(declare-const a0 a)
+(declare-const a1 a)
+(declare-const a2 a)
+(declare-const b b)
+(assert (= (f a1) (f a2)))  ; comment this line out to see unsat
+(assert (not (= (f a0) b)))
+(assert (forall ((x_0 a) (y_0 b)) (= (f x_0) y_0)))
+(check-sat)
+(get-info :reason-unknown)

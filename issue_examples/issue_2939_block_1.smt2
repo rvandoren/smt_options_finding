@@ -1,0 +1,18 @@
+(set-info :smt-lib-version 2.5)
+(set-option :produce-models true)
+(set-logic all)
+(declare-datatypes () ((a0(c0$8)(c0$9(c0$9$0 int)))))
+(define-funs-rec (
+(f9((v96 a0)(v99 string)(v9c string))bool)
+)
+(
+(str.<= v99 (str.at v9c (ite (= 0 (ite (is-c0$9 v96) (c0$9$0 v96) 23)) 0 (mod 0 (ite (is-c0$9 v96) (c0$9$0 v96) 23)))))
+))
+(declare-fun v36c() a0)
+(declare-fun v36f() string)
+(declare-fun v372() string)
+(assert (not (f9 v36c v36f v372)))
+(assert (= c0$8 v36c))
+(assert (= "\xccs'\xe7\xeakv\xc8=\xebn\xaf\x13z\xb9\x09\xd5*\x9e&\xbf\x8a\xe0\xeb\xc0\x17t\xb1\xee\xd6\x1a\xcd\xd0\x07\xce\xba\xcd\xc3\x93!\x8a\x19\x16\xed\x16\x82\xdd\x18\xb9\x83\x8e\xa3\xcd\x91\xb6\xb3" v36f))
+(assert (= "\xccs'\xe7\xeakv\xc8=\xebn\xaf\x13z\xb9\x09\xd5*\x9e&\xbf\x8a\xe0\xeb\xc0\x17t\xb1\xee\xd6\x1a\xcd\xd0\x07\xce\xba\xcd\xc3\x93!\x8a\x19\x16\xed\x16\x82\xdd\x18\xb9\x83\x8e\xa3\xcd\x91\xb6\xb3" v372))
+(check-sat)

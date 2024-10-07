@@ -1,0 +1,8 @@
+(set-option :produce-models true)
+(set-info :smt-lib-version 2.6)
+(set-logic fp)
+(define-sort fp () (_ floatingpoint 3 5))
+(declare-const s fp)
+(declare-const x fp)
+(assert (fp.isinfinite (fp.rem x s)))
+(check-sat)

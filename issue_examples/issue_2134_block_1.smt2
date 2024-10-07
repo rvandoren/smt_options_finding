@@ -1,0 +1,8 @@
+(set-option :produce-models true)
+(set-logic all)
+(declare-datatypes ((s 1)) ((par (t) ((x (getx t))))))
+(declare-fun x () (s int))
+(define-fun  y () (s (s int)) (x x))
+(assert ((_ is x) y))
+(check-sat)
+(get-model)

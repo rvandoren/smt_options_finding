@@ -1,0 +1,8 @@
+(set-option :smt.string_solver z3str3)
+(declare-const s string)
+(declare-const len int)
+(assert (= (str.indexof s "\00") len))
+(assert (>= len 0))
+(assert (not (= (bvand ((_ int2bv 12) len) #xf00) #x000)))
+(check-sat)
+(get-model)

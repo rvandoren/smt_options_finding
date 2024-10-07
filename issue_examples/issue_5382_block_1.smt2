@@ -1,0 +1,12 @@
+(set-option :smt.pull_nested_quantifiers true)
+(declare-datatypes ((|couple(integer,integer)| 0)) (((|couple(integer,integer)| (get_x_couple_integer_integer int) (get_y_couple_integer_integer int)))))
+(assert
+(let ((?x21 (lambda ((prj2_couple_cst int) )(exists ((prj1_couple_cst int) )(let ((?x8 (|couple(integer,integer)| 1 1)))
+(let ((?x10 (store ((as const (array |couple(integer,integer)| bool)) false) ?x8 true)))
+(select ?x10 (|couple(integer,integer)| prj1_couple_cst prj2_couple_cst)))))
+)
+))
+(let ((?x7 (store ((as const (array int bool)) false) 1 true)))
+(let (($x12 (= ?x7 ?x21)))
+(not $x12)))))
+(check-sat)

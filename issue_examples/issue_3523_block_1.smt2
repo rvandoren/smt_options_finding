@@ -1,0 +1,5 @@
+(set-option :proof true)
+(declare-fun a (int int) bool)
+(assert (forall ((b int) (c int)) (xor (>= c (/ 7 b)) (a b c))))
+(assert (a 4 1))
+(check-sat)

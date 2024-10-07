@@ -1,0 +1,8 @@
+(set-option :proof true)
+(set-option :smt.dack.eq true)
+(declare-fun x () string)
+(declare-fun i () int)
+(assert (distinct (str.at x i) "b"))
+(assert (xor (>= i 215) (>= i (str.len x))))
+(assert (>= (str.len x) 216))
+(check-sat)

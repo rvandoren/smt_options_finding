@@ -1,0 +1,7 @@
+(set-option :sat.lookahead.delta_fraction 0.3)
+(set-logic qf_fpbv)
+(declare-fun x () (_ floatingpoint 11 53))
+(declare-fun y () (_ bitvec 64))
+(assert (fp.gt x ((_ to_fp 11 53) rne 1.0)))
+(assert (bvult y #x8000000000000000))
+(check-sat)

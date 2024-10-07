@@ -1,0 +1,8 @@
+(set-option :produce-models true)
+(set-logic all)
+(declare-fun s0 () (array int bool))
+(declare-fun s1 () (array int bool))
+(declare-fun s2 () (array int bool))
+(define-fun s3 () bool (distinct s0 s1 s2))
+(assert s3)
+(check-sat)

@@ -1,0 +1,15 @@
+(set-option :random-seed 0)
+(set-option :produce-unsat-cores true)
+(set-info :status unsat)
+(declare-fun s () string)
+(declare-fun t () string)
+(assert (!
+(forall ((t1_fresh string) (t2 string) (t1 string) )(let (($x1206 (= (= t1_fresh s) false)))
+(let (($x1207 (= (str.++ t1_fresh t2) t)))
+(=> (and (= (str.substr t1 0 (str.len t1)) t1_fresh) $x1207) $x1206))))
+:named a1))
+(assert (!
+(let (($x995 (str.prefixof s t)))
+(let (($x1027 (= $x995 false)))
+(not $x1027))) :named a0))
+(check-sat)

@@ -1,0 +1,6 @@
+(set-option :smt.arith.reflect false)
+(set-option :rewriter.flat false)
+(declare-fun a () real)
+(declare-fun b () real)
+(assert (< a (* (* a b) 7) (mod 0 0)))
+(check-sat)

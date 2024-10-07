@@ -1,0 +1,5 @@
+(set-logic horn)
+(set-option :fp.xform.instantiate_arrays true)
+(declare-fun p (int) bool)
+(assert (p 0))
+(check-sat)

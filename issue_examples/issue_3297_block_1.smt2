@@ -1,0 +1,5 @@
+(set-option :proof true)
+(declare-fun a () string)
+(declare-fun b () string)
+(assert (str.contains (str.++ a b) (str.++ b "x")))
+(check-sat)

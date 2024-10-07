@@ -1,0 +1,6 @@
+(set-option :solver.enforce_model_conversion true)
+(declare-fun x0 () real)
+(declare-fun x1 () real)
+(declare-fun x2 () real)
+(assert (or (not (>= (+ (* (- 32) x2) (* (- 10) x0) (* (- 33) x0) (* 16 x1)) (- 35))) (> (+ (* (- 46) x1) (* 44 x1) (* (- 15) x1) (* (- 22) x2)) (- 20))))
+(check-sat)

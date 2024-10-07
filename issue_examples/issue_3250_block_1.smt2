@@ -1,0 +1,6 @@
+(set-option :solver.enforce_model_conversion true)
+(set-option :smt.phase_selection 1)
+(declare-fun a () real)
+(declare-fun b () real)
+(assert (not (= b 0)))
+(check-sat)

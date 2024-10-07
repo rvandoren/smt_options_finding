@@ -1,0 +1,8 @@
+(set-option :smt.arith.random_initial_value true)
+(set-option :smt.threads 3)
+(declare-fun a () string)
+(declare-fun b () int)
+(assert (<= b 72))
+(assert (=  (int.to.str b)  (str.++ "0" a)))
+(assert (distinct a ""))
+(check-sat)

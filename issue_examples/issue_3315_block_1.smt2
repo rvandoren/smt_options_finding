@@ -1,0 +1,6 @@
+(set-option :proof true)
+(assert (forall ((a real) (b real))
+(or (>= (+ a b) (- 10 0))
+(not (<= (+ (* a b)) 0))
+(>= (+ (mod 0 b)) 3))))
+(check-sat)

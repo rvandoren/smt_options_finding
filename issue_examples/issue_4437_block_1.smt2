@@ -1,0 +1,6 @@
+(set-option :proof true)
+(set-option :rlimit 256)
+(set-option :smt.arith.solver 3)
+(set-option :rewriter.cache_all true)
+(assert (forall ((a int)) (= a (- 1))))
+(check-sat)

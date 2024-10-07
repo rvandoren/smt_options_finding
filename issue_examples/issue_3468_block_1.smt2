@@ -1,0 +1,6 @@
+(set-option :smt.phase_selection 5)
+(set-option :proof true)
+(set-option :model_validate true)
+(declare-fun a () real)
+(assert (> (/ 2 a) (/ 1 a) 0))
+(check-sat)

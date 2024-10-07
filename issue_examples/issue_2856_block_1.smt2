@@ -1,0 +1,6 @@
+(set-option :produce-models true)
+(set-logic qf_bv)
+(declare-fun a () (_ bitvec 32))
+(assert (bvslt a (_ bv32768 32)))
+(assert (bvslt (_ bv4294934527 32) a))
+(check-sat)

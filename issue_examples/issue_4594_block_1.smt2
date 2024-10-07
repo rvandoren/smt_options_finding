@@ -1,0 +1,7 @@
+(set-option :produce-models true)
+(set-option :smtlib2_compliant true)
+(set-logic all)
+(declare-fun -7.0 () int)
+(assert (= -7.0 0))
+(check-sat)
+(get-model)

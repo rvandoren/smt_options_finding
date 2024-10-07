@@ -1,0 +1,5 @@
+(set-option :solver.enforce_model_conversion true)
+(declare-fun a () real)
+(declare-fun b () real)
+(assert (xor (>= b 0) (>= (+ (/ 5 b)) 2) (< a 0)))
+(check-sat)
