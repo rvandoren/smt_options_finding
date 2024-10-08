@@ -77,7 +77,7 @@ def parallel_process(smt_files, num_processes):
     chunks = [smt_files[i::num_processes] for i in range(num_processes)]
     csv_filenames = [f"process_results_{i}.csv" for i in range(num_processes)]
     with Pool(processes=num_processes) as pool:
-        list(tqdm(pool.imap(process_chunk_with_filename, zip(chunks, csv_filenames)), total=num_processes, desc="Processing SMT files"))
+        list(tqdm(pool.imap(process_chunk_with_filename, zip(chunks, csv_filenames)), total=len(smt_files), desc="Processing SMT files"))
     combine_csv_files(csv_filenames, output_csv)
 
 def process_chunk_with_filename(args):
@@ -95,16 +95,12 @@ def process_chunk(smt_files_chunk, csv_filename):
     Process a chunk of SMT files and write the results to a single CSV file.
     """
 
-    initialize_csv(csv_filename)
+    initialize_csv(csv_filename, num_custom_runs=2)
     for smt_file in smt_files_chunk:
         process_file_with_options(smt_file, csv_filename)
-
-def parallel_process(smt_files):
-    with Pool(processes=2) as pool:
-        list(tqdm(pool.imap(process_file_with_options, smt_files), total=len(smt_files), desc="Processing SMT files"))
 
 if __name__ == "__main__":
     os.makedirs(unsat_sat_files, exist_ok=True)
     # Collect all SMT files that have to be tested from a hierarchical folder structure
     smt_files = collect_smt_files(root_smt_folder)
-    parallel_process(smt_files, num_processes=4)
+    parallel_process(smt_files, num_processes=2)

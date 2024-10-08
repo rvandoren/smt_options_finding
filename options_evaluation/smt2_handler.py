@@ -15,13 +15,12 @@ def collect_smt_files(root_folder):
         first_level_path = os.path.join(root_folder, first_level_folder)
         if os.path.isdir(first_level_path):
             folder_files = []
-            for root, _, files in os.walk(first_level_path):
+            for root, _, files in os.walk(first_level_path, topdown=True):
                 for file in files:
                     if file.endswith('.smt2'):
                         folder_files.append(os.path.join(root, file))
-                selected_files = random.sample(folder_files, min(20, len(folder_files)))
-                smt_files.extend(selected_files)
-                break
+            selected_files = random.sample(folder_files, min(20, len(folder_files)))
+            smt_files.extend(selected_files)
     return smt_files
 
 
