@@ -102,5 +102,6 @@ def process_chunk(smt_files_chunk, csv_filename):
 if __name__ == "__main__":
     os.makedirs(unsat_sat_files, exist_ok=True)
     # Collect all SMT files that have to be tested from a hierarchical folder structure
-    smt_files = collect_smt_files(root_smt_folder)
+    smt_files = collect_smt_files(root_smt_folder) #, "ChosenDataset", 20)
+    print("done choosing smt files")
     parallel_process(smt_files, num_processes=2)
