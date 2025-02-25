@@ -1,0 +1,7 @@
+(set-option :sat.local_search_threads 1)
+(set-logic QF_FP)
+(declare-fun x () (_ FloatingPoint 11 53))
+(declare-fun y () (_ FloatingPoint 11 53))
+(assert (fp.gt x ((_ to_fp 11 53) RNE 1.0)))
+(assert (fp.lt y x))
+(check-sat)

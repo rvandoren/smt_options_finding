@@ -1,6 +1,0 @@
-(set-option :solver.enforce_model_conversion true)
-(declare-fun a () real)
-(declare-fun b () real)
-(declare-fun c () real)
-(assert (< a (- 0.5)))
-(check-sat)

@@ -1,5 +1,0 @@
-(set-option :proof true)
-(assert (forall ( ( ?a int ) ( ?b int ) ( ?c ( array int ( array int real ) ) )
-(?d (array int (array int real ) ) ) )
-(distinct ( select ( ?c ?b ) ?a ) ( select ( ?d ?b ) ?a ))))
-(check-sat)

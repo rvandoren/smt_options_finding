@@ -1,0 +1,6 @@
+(set-option :diagnostic-output-channel "stdout")
+(set-option :produce-models true)
+(set-logic QF_BV)
+(declare-fun s0 () Bool)
+(assert s0)
+(check-sat)

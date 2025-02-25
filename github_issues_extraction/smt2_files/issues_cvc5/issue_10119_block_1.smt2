@@ -1,0 +1,7 @@
+(set-logic ALL)
+(set-option :produce-unsat-cores true)
+(set-option :dump-unsat-cores-full true)
+(declare-const a Int)
+(assert (< 0 a))
+(assert (> 0 a))
+(check-sat)

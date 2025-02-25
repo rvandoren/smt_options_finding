@@ -1,6 +1,0 @@
-(set-option :produce-unsat-assumptions true)
-(declare-datatypes () ((llist (lcons (hh int) (tt llist)) (lnil))))
-(declare-fun ll () llist)
-(declare-fun pp (llist) bool)
-(assert (pp (tt ll)))
-(check-sat)

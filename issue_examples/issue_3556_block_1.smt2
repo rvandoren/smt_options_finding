@@ -1,7 +1,0 @@
-(set-option :model_validate true)
-(set-option :smt.array.extensional false)
-(declare-fun a () (set int))
-(declare-fun b () (set int))
-(assert (distinct a b))
-(push)
-(check-sat)

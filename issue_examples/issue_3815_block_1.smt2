@@ -1,6 +1,0 @@
-(set-option :sat.prob_search true)
-(declare-const a bool)
-(declare-const b bool)
-(assert b)
-(assert (or a b))
-(check-sat)

@@ -1,0 +1,7 @@
+(set-logic ALL)
+(set-option :produce-models true)
+(declare-heap (Int Int))
+(declare-fun x () Int)
+(assert (= x (as sep.nil Int)))
+(check-sat)
+(get-model)

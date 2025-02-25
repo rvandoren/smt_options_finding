@@ -1,0 +1,8 @@
+(set-option :produce-models true)
+(set-logic ALL)
+(declare-fun x () Real)
+(assert (and (> x (/ 16.0 5.0)) (< x (/ 127.0 10.0))))
+(minimize x)
+(maximize x)
+(set-option :opt.priority box)
+(check-sat)

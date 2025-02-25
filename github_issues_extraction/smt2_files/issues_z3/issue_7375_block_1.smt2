@@ -1,0 +1,6 @@
+(set-option :sat.ddfw.threads 1)
+(set-logic QF_BV)
+(declare-fun x () (_ BitVec 32))
+(declare-fun y () (_ BitVec 32))
+(assert (bvult (bvmul x y) (bvadd x y)))
+(check-sat)

@@ -1,0 +1,6 @@
+(set-logic QF_FPBV)
+(declare-fun x () (_ FloatingPoint 11 53))
+(declare-fun y () (_ BitVec 64))
+(assert (fp.gt x ((_ to_fp 11 53) RNE 1.0)))
+(assert (bvult y #x8000000000000000))
+(check-sat)

@@ -1,5 +1,0 @@
-(set-option :proof true)
-(set-option :smt.clause_proof true)
-(declare-fun a (int) bool)
-(assert (forall ((b int)) (or (and (a b) (< b 1)) (a (- b 1)))))
-(check-sat)

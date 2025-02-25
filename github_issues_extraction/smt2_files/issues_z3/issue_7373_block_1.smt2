@@ -1,0 +1,8 @@
+(set-option :sat.phase sticky)
+(set-logic QF_NIA)
+(declare-fun x () Int)
+(declare-fun y () Int)
+(assert (= (* x x x) (+ (* y y) 1)))
+(assert (>= x 0))
+(assert (< y 10))
+(check-sat)
