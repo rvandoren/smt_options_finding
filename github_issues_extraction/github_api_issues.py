@@ -9,12 +9,13 @@ from datetime import datetime, timedelta, timezone
 """
 
 # Adjust to personal access token
-PERSONAL_ACCESS_TOKEN = None #TODO: Github API key
+#PERSONAL_ACCESS_TOKEN = None #TODO: Github API key
 # REPOSITORY = 'Z3Prover/z3'  # 100 weeks
 # REPOSITORY = 'cvc5/cvc5'  # 100 weeks
 REPOSITORY = 'SRI-CSL/yices2'  # 300 weeks
 
-g = Github(PERSONAL_ACCESS_TOKEN)
+# g = Github(PERSONAL_ACCESS_TOKEN)
+g = Github(None)
 repo = g.get_repo(REPOSITORY)
 
 KEYWORDS = ['option', 'options']#, 'tactic', 'tactics']
