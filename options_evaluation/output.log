@@ -1,0 +1,5 @@
+done choosing smt files
+<bound method CounterStack.get_all_counts of <utils.CounterStack object at 0x1542b3a610f0>>
+Problem in file: Dataset/BV_I/20170501-Heizmann-UltimateAutomizer/byte_add_2_true-unreach-call_true-no-overflow.i.smt2 processed by process 3639382 for option combintation 'Custom 1'
+Expected results: 4412
+Generated results: 629

@@ -1,0 +1,31 @@
+Processing SMT files:   0%|          | 0/291 [00:00<?, ?it/s]Processing SMT files:   0%|          | 0/291 [40:09<?, ?it/s]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/main.py", line 58, in process_chunk_with_filename
+    process_chunk(smt_files_chunk, csv_filename)
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/main.py", line 68, in process_chunk
+    process_file_with_options(smt_file, csv_filename)
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/main.py", line 37, in process_file_with_options
+    process_smt_file(file, custom_options_list, root_smt_folder, final_dataset, csv_filename, timeout, remove_existing, evaluate_model)
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/smt2_handler.py", line 50, in process_smt_file
+    append_results_to_csv(smt_path, theory, output_csv, expected_outputs, custom_options_list, default_results, custom_results)
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/csv_handler.py", line 26, in append_results_to_csv
+    print(f"Number of runtime analysis: {len(default_results[1])}")
+TypeError: object of type 'int' has no len()
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/main.py", line 74, in <module>
+    parallel_process(smt_files, num_processes=4)
+  File "/cluster/home/rvandoren/resarchProject/smt_options_finding/options_evaluation/main.py", line 49, in parallel_process
+    list(tqdm(pool.imap(process_chunk_with_filename, zip(chunks, csv_filenames)), total=len(smt_files), desc="Processing SMT files"))
+  File "/cluster/home/rvandoren/.local/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+TypeError: object of type 'int' has no len()

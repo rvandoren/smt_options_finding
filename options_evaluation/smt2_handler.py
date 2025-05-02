@@ -1,36 +1,11 @@
 import os
-import shutil
-import random
-from runner import run_z3
-from csv_handler import append_to_csv
-
-def collect_smt_files(root_folder): #, chosen_smt_files, max_files_per_theory):
-
-    """
-    Collects 20 random SMT file paths from each first-level folder in the root folder.
-    """
-
-    # os.makedirs(chosen_smt_files, exist_ok=True)
-    smt_files = []
-    for first_level_folder in os.listdir(root_folder):
-        first_level_path = os.path.join(root_folder, first_level_folder)
-        if os.path.isdir(first_level_path):
-            folder_files = []
-            for root, _, files in os.walk(first_level_path, topdown=True):
-                for file in files:
-                    if file.endswith('.smt2'):
-                        folder_files.append(os.path.join(root, file))
-            selected_files = random.sample(folder_files, min(20, len(folder_files)))
-            # for smt_file in selected_files:
-            #     relative_path = os.path.relpath(smt_file, root_folder)
-            #     new_file_path = os.path.join(chosen_smt_files, relative_path)
-            #     os.makedirs(os.path.dirname(new_file_path), exist_ok=True)
-            #     shutil.copy(smt_file, new_file_path)
-            smt_files.extend(selected_files)
-    return smt_files
+import re
+from runner import run_z3, run_cvc5
+from csv_handler import *
+from utils import *
 
 
-def process_smt_file(smt_path, custom_options_list, root_smt_folder, unsat_files, output_csv, timeout, mode):
+def process_smt_file(smt_path, custom_options_list, root_smt_folder, unsat_files, output_csv, timeout, remove_existing, evaluate_model):
 
     """
     Process an individual SMT file and run Z3 multiple times.
@@ -38,37 +13,44 @@ def process_smt_file(smt_path, custom_options_list, root_smt_folder, unsat_files
 
     with open(smt_path, 'r') as file:
         lines = file.readlines()
-    existing_options, new_lines, expected_outputs = extract_options_and_output(lines)
+
+    existing_options, new_lines, expected_outputs, theory, total_vars, total_checks = extract_options_output_theory(lines)
     if not expected_outputs:
         expected_outputs = ["None"]
-    # Check if expected output is UNSAT or SAT
-    elif not ("unsat" in expected_outputs or "sat" in expected_outputs):
+    elif not ("unsat" in expected_outputs or "sat" in expected_outputs or "unknown" in expected_outputs):
         return
-    # Store existing options in csv
-    options = "; ".join(existing_options) if existing_options else "None"
-    # Copy the file to the folder containing all UNSAT and SAT SMT formulas
-    copy_unsat_file(smt_path, unsat_files, root_smt_folder)
-
-    # Run Z3 with default options
-    modified_smt_path = modify_smt_file(smt_path, lines, new_lines, [], mode)
-    actual_outputs_default, total_time_default = run_z3(smt_path, timeout)
-    os.remove(modified_smt_path)
     
-    # Run Z3 with each set of custom options
+    # Save all the options that were already defined in the SMT file
+    options = "; ".join(existing_options) if existing_options else "None"
+
+    # Copy the file to the folder containing all SMT formulas that were used to create the processed dataset
+    copy_file(smt_path, unsat_files, root_smt_folder)
+
+    # Run with default options
+    modified_smt_path = modify_options_in_file(smt_path, lines, new_lines, [], remove_existing, evaluate_model)
+    default_results = run_z3(modified_smt_path, total_vars, total_checks, timeout)
+    try:
+        os.remove(modified_smt_path)
+    except FileNotFoundError:
+        print(f"Warning: Could not remove the file {modified_smt_path} as it was not found.")
+
+    # Run with each set of custom options
     custom_results = []
     for custom_options in custom_options_list:
-        # Modify SMT file temporarily by adding custom options and
-        # with or without removing existing options
-        modified_smt_path = modify_smt_file(smt_path, lines, new_lines, custom_options, mode)
-        actual_outputs_custom, total_time_custom = run_z3(modified_smt_path, timeout)
-        os.remove(modified_smt_path)
-        custom_results.append((actual_outputs_custom, total_time_custom))
-    # Append results to CSV
-    for i, expected_output in enumerate(expected_outputs):
-        append_to_csv(smt_path, output_csv, expected_output, options, actual_outputs_default, total_time_default, custom_results)
+
+        # Modify SMT file temporarily by adding custom options
+        modified_smt_path = modify_options_in_file(smt_path, lines, new_lines, custom_options[1], remove_existing, evaluate_model)
+        verification_results_custom, total_time_custom, model_assigned_percentages_custom = run_z3(modified_smt_path, total_vars, total_checks, timeout)
+        custom_results.append((verification_results_custom, total_time_custom, model_assigned_percentages_custom))
+        try:
+            os.remove(modified_smt_path)
+        except FileNotFoundError:
+            print(f"Warning: Could not remove the file {modified_smt_path} as it was not found.")
+
+    append_results_to_csv(smt_path, theory, output_csv, expected_outputs, custom_options_list, default_results, custom_results)
 
 
-def extract_options_and_output(lines):
+def extract_options_output_theory(lines):
 
     """
     Extracts existing SMT options and expected output from the file lines.
@@ -77,36 +59,77 @@ def extract_options_and_output(lines):
     existing_options = []
     new_lines = []
     expected_outputs = []
+    theory = None
+    total_vars = []
+    total_checks = 0
+    counter_stack = CounterStack()
+
     for line in lines:
         if line.startswith("(set-info :status "):
             expected_output = line.split(":status")[-1].strip().replace(")", "")
             expected_outputs.append(expected_output)
         elif line.startswith("(set-option :"):
             existing_options.append(line.strip())
+        elif line.startswith("(set-logic"):
+            new_lines.append(line)
+            start = line.find(" ") + 1
+            end = line.find(")")
+            if start > 0 and end > start:
+                theory = line[start:end].strip()
+        elif line.startswith("(declare-"):
+            new_lines.append(line)
+            counter_stack.increment()
+        elif line.startswith("(define-"):
+            new_lines.append(line)
+            counter_stack.increment()
+        elif line.startswith("(check-sat)"):
+            total_checks += 1
+            tot_variables = counter_stack.sum_all()
+            total_vars.append(tot_variables)
+            while total_checks > len(expected_outputs):
+                expected_outputs.append("NA")
+                print("Problem: More check-sat than expected Outputs.")
+            new_lines.append(line)
+        elif line.startswith("(pop "):
+            counter_stack.pop()
+            new_lines.append(line)
+        elif line.startswith("(push "):
+            counter_stack.push()
+            new_lines.append(line)
         else:
             new_lines.append(line)
-    return existing_options, new_lines, expected_output
+    print(counter_stack.get_all_counts)
+    return existing_options, new_lines, expected_outputs, theory, total_vars, total_checks
 
-def copy_unsat_file(smt_path, unsat_files, root_smt_folder):
+
+def add_get_model(lines):
 
     """
-    Copies the file to the UNSAT files folder.
+    Adds (get-model) after every (check-sat) statement in the SMT file.
     """
+    
+    updated_lines = ["(set-option :produce-models true)\n"]
+    for line in lines:
+        updated_lines.append(line)
+        if line.strip() == "(check-sat)":
+            updated_lines.append("(get-model)\n")
+    return updated_lines
 
-    new_path = os.path.join(unsat_files, smt_path.replace(root_smt_folder, "").replace(os.sep, "_").lstrip("_"))
-    os.makedirs(os.path.dirname(new_path), exist_ok=True)
-    shutil.copy(smt_path, new_path)
 
-def modify_smt_file(smt_path, lines, new_lines, custom_options, mode):
+def modify_options_in_file(smt_path, lines, new_lines, custom_options, remove_existing, evaluate_model):
 
     """
     Modifies the SMT file by removing existing options if the mode is 'remove_existing'.
     """
 
-    if mode == "remove_existing":
+    if remove_existing:
         modified_lines = custom_options + new_lines
     else:
         modified_lines = custom_options + lines
+    
+    if evaluate_model:
+        modified_lines = add_get_model(modified_lines)
+
     modified_smt_path = smt_path + ".modified"
     with open(modified_smt_path, 'w') as modified_file:
         modified_file.writelines(modified_lines)
